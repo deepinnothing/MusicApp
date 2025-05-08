@@ -16,3 +16,5 @@ __Postęp (Programowanie Aplikacji Rozproszonych):__
 - ☠️ Inne niewymienione (np. Pełna autentyfikacja, Implementacja kolejekowania w RabbitMQ) - od __0pkt__ do __1pkt__ - autentyfikacja chyba jest już zrobiona (bo nie do końca rozumiem, co znaczy "Pełna"), a RabbitMQ mi nie działał normalnie (no i w ogóle nie do końca zrozumiałem o co w nim chodzi i nie podoba mi się pomysł instalowania dodatkowych rzeczy, które do tego jeszcze nie zawsze działaja)
 
 Frontend najlepiej dodać w jakimś podkatalogu, np. MusicAppReact, aby mieć wszystko w jednym miejscu
+
+W bazie danych już znajdują się niektóre dane (ale użytkowników na razie nie ma żadnych), jednak prosiłbym póki co niczego stamtąd nie usuwać, bo ręczne wpisywanie wszystkiego zajeło mi trochę czasu :)
