@@ -18,6 +18,33 @@ public class LibraryController : ControllerBase
         _database = database;
     }
     
+    [HttpGet("tracks")]
+    public async Task<ActionResult> GetAllTracks([FromServices] ClaimsPrincipal user)
+    {
+        try
+        {
+            // Get user id from the JWT token
+            string? userId = user.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userId)) return StatusCode(StatusCodes.Status401Unauthorized);
+            
+            // Find the user in the database to get access to the user's library
+            IMongoCollection<User>? usersCollection = _database.GetCollection<User>("users");
+            FilterDefinition<User>? userFilter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            User? foundUser = await usersCollection.Find(userFilter).FirstOrDefaultAsync();
+            if (foundUser == null) return StatusCode(StatusCodes.Status404NotFound);
+            
+            // User documents only store tracks' ids, so fetch of the track collection is needed
+            IMongoCollection<Track>? tracksCollection = _database.GetCollection<Track>("tracks");
+            FilterDefinition<Track>? trackFilter = Builders<Track>.Filter.In(t => t.Id, foundUser.LibraryTracks);
+            return Ok(await tracksCollection.Find(trackFilter).ToListAsync());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+    
     [HttpPatch("tracks")]
     public async Task<ActionResult> AddTrack([FromBody] string trackId, [FromServices] ClaimsPrincipal user)
     {
@@ -62,6 +89,36 @@ public class LibraryController : ControllerBase
             return result.MatchedCount == 0 ? StatusCode(StatusCodes.Status401Unauthorized) : 
                 result.ModifiedCount == 0 ? StatusCode(StatusCodes.Status400BadRequest) : 
                 StatusCode(StatusCodes.Status200OK);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+    
+    [HttpGet("album")]
+    public async Task<ActionResult<List<Album>>> GetAllAlbums([FromServices] ClaimsPrincipal user)
+    {
+        try
+        {
+            // Get user id from the JWT token
+            string? userId = user.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userId)) return StatusCode(StatusCodes.Status401Unauthorized);
+            
+            // Find the user in the database to get access to the user's library
+            IMongoCollection<User>? usersCollection = _database.GetCollection<User>("users");
+            FilterDefinition<User>? userFilter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            User? foundUser = await usersCollection.Find(userFilter).FirstOrDefaultAsync();
+            if (foundUser == null) return StatusCode(StatusCodes.Status404NotFound);
+            
+            // User documents only store albums' ids, so fetch of the album collection is needed
+            IMongoCollection<Album>? albumsCollection = _database.GetCollection<Album>("albums");
+            FilterDefinition<Album>? albumFilter = Builders<Album>.Filter.In(a => a.Id, foundUser.LibraryAlbums);
+            
+            // When requesting all the albums, tracks are usually not needed and create too much boilerplate
+            ProjectionDefinition<Album>? projection = Builders<Album>.Projection.Exclude("tracks");
+            return Ok(await albumsCollection.Find(albumFilter).Project<Album>(projection).ToListAsync());
         }
         catch (Exception ex)
         {

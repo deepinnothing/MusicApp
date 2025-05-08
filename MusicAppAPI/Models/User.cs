@@ -23,14 +23,16 @@ public class User
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<string>? Roles { get; set; }
 
+    // This property is only used to communicate with MongoDB
     [BsonElement("library_tracks")]
     [BsonRepresentation(BsonType.ObjectId)]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     public List<string> LibraryTracks { get; set; } = [];
 
+    // This property is only used to communicate with MongoDB
     [BsonElement("library_albums")]
     [BsonRepresentation(BsonType.ObjectId)]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     public List<string> LibraryAlbums { get; set; } = [];
     
     [BsonIgnore] // This property should never be written to the database

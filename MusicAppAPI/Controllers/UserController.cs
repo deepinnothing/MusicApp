@@ -49,7 +49,7 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Roles = "admin")]
-    [HttpPost("[controller]/give-admin-rights")]
+    [HttpPatch("[controller]/give-admin-rights")]
     public async Task<ActionResult> GiveAdminRightsAsync([FromBody] string email)
     {
         try

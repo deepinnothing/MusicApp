@@ -8,18 +8,18 @@ using MusicAppAPI.Models;
 namespace MusicAppAPI.Controllers;
 
 [ApiController]
-[Route("api")]
-public class StoreController : ControllerBase
+[Route("api/[controller]")]
+public class AlbumsController : ControllerBase
 {
     private readonly IMongoDatabase _database;
 
-    public StoreController(IMongoDatabase database)
+    public AlbumsController(IMongoDatabase database)
     {
         _database = database;
     }
 
     [Authorize(Roles = "admin")]
-    [HttpPost("albums")]
+    [HttpPost]
     public async Task<ActionResult> AddNewAlbum([FromBody] Album album)
     {
         try
@@ -49,7 +49,7 @@ public class StoreController : ControllerBase
         }
     }
 
-    [HttpGet("albums")]
+    [HttpGet]
     public async Task<ActionResult<List<Album>>> GetAllAlbums()
     {
         try
@@ -69,7 +69,7 @@ public class StoreController : ControllerBase
     }
 
     [Authorize(Roles = "admin")]
-    [HttpPatch("albums/{id}")]
+    [HttpPatch("{id}")]
     public async Task<ActionResult> ModifyAlbum(string id, [FromBody] Album albumUpdate)
     {
         try
@@ -164,7 +164,7 @@ public class StoreController : ControllerBase
     }
 
     [Authorize(Roles = "admin")]
-    [HttpDelete("albums/{id}")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAlbum(string id)
     {
         try
@@ -188,7 +188,7 @@ public class StoreController : ControllerBase
         }
     }
 
-    [HttpGet("albums/{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Album>> GetAlbumById(string id)
     {
         try
@@ -218,7 +218,7 @@ public class StoreController : ControllerBase
         }
     }
 
-    [HttpGet("albums/search")]
+    [HttpGet("search")]
     public async Task<ActionResult<List<Album>>> SearchAlbums(string query)
     {
         try
@@ -232,46 +232,6 @@ public class StoreController : ControllerBase
             // Multiple albums might be returned, and tracks could create too much boilerplate
             ProjectionDefinition<Album>? projection = Builders<Album>.Projection.Exclude("tracks");
             return Ok(await albumsCollection.Find(filter).Project<Album>(projection).ToListAsync());
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
-    }
-    
-    [HttpGet("tracks/search")]
-    public async Task<ActionResult<List<Track>>> SearchTracks(string query)
-    {
-        try
-        {
-            IMongoCollection<Track>? tracksCollection = _database.GetCollection<Track>("tracks");
-            // Search by titles and artists
-            FilterDefinition<Track>? filter = Builders<Track>.Filter.Or(
-                Builders<Track>.Filter.Regex("title", new BsonRegularExpression(query, "i")),
-                Builders<Track>.Filter.Regex("artist", new BsonRegularExpression(query, "i")));
-            
-            return await tracksCollection.Find(filter).ToListAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
-    }
-    
-    [HttpGet("tracks")]
-    public async Task<ActionResult<List<Track>>> GetAllTracks()
-    {
-        try
-        {
-            IMongoCollection<Track>? tracksCollection = _database.GetCollection<Track>("tracks");
-            // An empty filter to find all documents in the collection
-            FilterDefinition<Track>? filter = Builders<Track>.Filter.Empty;
-
-            List<Track>? tracks = await tracksCollection.Find(filter).ToListAsync();
-
-            return Ok(tracks);
         }
         catch (Exception ex)
         {
