@@ -8,11 +8,17 @@ __Na co zwrócić uwagę:__
 - Niektóre właściwości obiektów są używane sytuacyjnie (np. tylko w procesie komunikacji z bazą danych)
 
 __Postęp:__
+
 ✅ Back-end dla wszystkich metod CRUD dla jednej encji w architekturze REST - __1pkt__ - jest zrobione dla encji Album
+
 ✅ Zastosowanie realnej bazy danych, np. MsSQL - __1pkt__ - jest zastosowana MongoDB
+
 🆘 Osobna aplikacja Front-endowa wykorzystująca wszystkie funkcje CRUD dla API - __1pkt__
+
 ⚠️ Obsługa błędów try-catch wraz ze zwracaniem odpowiedzi (kod i komunikat) - __0.5pkt__ - w sumie try-catch jest już zastosowany, chyba powinno wystarczyć po prostu dodać porządne komunikaty
+
 ❓ Przesyłanie/pobieranie danych binarnych (dokumenty) - __0.5pkt__ - można dodać możliwość opcjonalnego przesłania/pobrania plików MP3, aczkolwiek nie jestem pewien, jak to zrobić, mam nadzieje, że to pojawi się na zajęciach
+
 ☠️ Inne niewymienione (np. Pełna autentyfikacja, Implementacja kolejekowania w RabbitMQ) - od __0pkt__ do __1pkt__ - autentyfikacja chyba jest już zrobiona (bo nie do końca rozumiem, co znaczy "Pełna"), a RabbitMQ mi nie działał normalnie (no i w ogóle nie do końca zrozumiałem o co w nim chodzi i nie podoba mi się pomysł instalowania dodatkowych rzeczy, które do tego jeszcze nie zawsze działaja)
 
 Frontend najlepiej dodać w jakimś podkatalogu, np. MusicAppReact, aby mieć wszystko w jednym miejscu
