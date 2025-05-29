@@ -6,6 +6,7 @@ __Na co zwrócić uwagę (API):__
 - Chociaż utwory są przechowywane w osobnej kolekcji, jednak nie można nimi bezpośrednio zarządzać. To jest możliwe tylko przez zarządzanie albumem
 - Utwory istnieją tylko w ramach albumu: przy dodaniu albumu są dodawane utwory w nim zawarte, przy modyfikacji albumu są zarazem modyfikowane/dodawane/usuwane utwory, przy usunięciu albumu są usuwane wszystkie związane z nim utwory
 - Niektóre właściwości obiektów są używane sytuacyjnie (np. tylko w procesie komunikacji z bazą danych)
+- ID są generowane automatycznie przez MongoDB w czasie dodawania obiektów do bazy danych
 
 __Postęp (Programowanie Aplikacji Rozproszonych):__
 - ✅ Back-end dla wszystkich metod CRUD dla jednej encji w architekturze REST - __1pkt__ - jest zrobione dla encji Album
