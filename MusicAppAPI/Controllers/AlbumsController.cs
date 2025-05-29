@@ -93,8 +93,8 @@ public class AlbumsController : ControllerBase
 
             if (albumUpdate.Tracks != null)
             {
-                if (albumUpdate.Tracks == null || albumUpdate.Tracks.Count == 0)
-                    return StatusCode(StatusCodes.Status400BadRequest, "Album must have at least one track.");
+                if (albumUpdate.Tracks.Count == 0)
+                    return StatusCode(StatusCodes.Status400BadRequest, "Album cannot have 0 tracks.");
                 
                 // Validate tracks
                 if (albumUpdate.Tracks.Any(t => t.Title == null || t.Length == null))
