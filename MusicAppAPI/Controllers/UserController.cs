@@ -29,7 +29,7 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
     
@@ -44,7 +44,7 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 
@@ -61,7 +61,7 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
     
