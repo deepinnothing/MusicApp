@@ -1,4 +1,5 @@
 using System.Text;
+using EasyNetQ;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -80,6 +81,9 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod();
         });
 });
+
+// Register RabbitMQ
+builder.Services.AddSingleton(RabbitHutch.CreateBus("host=localhost"));
 
 WebApplication app = builder.Build();
 

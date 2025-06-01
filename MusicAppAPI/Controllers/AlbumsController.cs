@@ -1,3 +1,4 @@
+using EasyNetQ;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -12,10 +13,12 @@ namespace MusicAppAPI.Controllers;
 public class AlbumsController : ControllerBase
 {
     private readonly IMongoDatabase _database;
+    private readonly IBus _rabbitMQBus;
 
-    public AlbumsController(IMongoDatabase database)
+    public AlbumsController(IMongoDatabase database, IBus rabbitMQBus)
     {
         _database = database;
+        _rabbitMQBus = rabbitMQBus;
     }
 
     [Authorize(Roles = "admin")]
@@ -214,6 +217,27 @@ public class AlbumsController : ControllerBase
                 track.AlbumId = null;
             }
 
+            // Send a message to RabbitMQ to track album views
+            try
+            {
+                AlbumViewedMessage message = new()
+                {
+                    AlbumId = album.Id!,
+                    AlbumTitle = album.Title!,
+                    AlbumArtist = album.Artist!,
+                    ViewedAt = DateTime.UtcNow,
+                    Source =
+                        $"{Request.HttpContext.Connection.RemoteIpAddress}:{Request.HttpContext.Connection.RemotePort}"
+                };
+
+                await _rabbitMQBus.PubSub.PublishAsync(message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            
+            // Return the response even if RabbitMQ is down
             return Ok(album);
         }
         catch (Exception ex)

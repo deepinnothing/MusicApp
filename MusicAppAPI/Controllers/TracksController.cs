@@ -1,7 +1,7 @@
+using EasyNetQ;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MusicAppAPI.Models;
 
@@ -12,10 +12,12 @@ namespace MusicAppAPI.Controllers;
 public class TracksController : ControllerBase
 {
     private readonly IMongoDatabase _database;
+    private readonly IBus _rabbitMQBus;
 
-    public TracksController(IMongoDatabase database)
+    public TracksController(IMongoDatabase database, IBus rabbitMQBus)
     {
         _database = database;
+        _rabbitMQBus = rabbitMQBus;
     }
 
     [HttpGet("search")]
@@ -88,7 +90,7 @@ public class TracksController : ControllerBase
     }
 
     [HttpGet("{id}/download")]
-    public ActionResult DownloadTrack(string id, [FromQuery] string? title, [FromQuery] string? artist)
+    public async Task<ActionResult> DownloadTrack(string id, [FromQuery] string? title, [FromQuery] string? artist)
     {
         try
         {
@@ -100,6 +102,24 @@ public class TracksController : ControllerBase
             if (artist != null && title != null)
                 fileName = $"{artist} - {title}.flac";
             
+            // Send a message to RabbitMQ to track downloads
+            try
+            {
+                TrackDownloadedMessage message = new()
+                {
+                    TrackId = id,
+                    DownloadedAt = DateTime.UtcNow,
+                    Source = $"{Request.HttpContext.Connection.RemoteIpAddress}:{Request.HttpContext.Connection.RemotePort}"
+                };
+
+                await _rabbitMQBus.PubSub.PublishAsync(message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            
+            // Return the response even if RabbitMQ is down
             FileStream stream = new(filePath, FileMode.Open, FileAccess.Read);
             return File(stream, "audio/flac", fileName);
         }
