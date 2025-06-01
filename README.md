@@ -16,7 +16,7 @@ __Postęp (Programowanie Aplikacji Rozproszonych):__
 - 🆘 Osobna aplikacja Front-endowa wykorzystująca wszystkie funkcje CRUD dla API - __1pkt__
 - ✅ Obsługa błędów try-catch wraz ze zwracaniem odpowiedzi (kod i komunikat) - __0.5pkt__ - chyba zrobione
 - ✅ Przesyłanie/pobieranie danych binarnych (dokumenty) - __0.5pkt__ - dodałem możliwość przeysłania i pobierania plików FLAC
-- ☠️ Inne niewymienione (np. Pełna autentyfikacja, Implementacja kolejekowania w RabbitMQ) - od __0pkt__ do __1pkt__ - autentyfikacja chyba jest już zrobiona (bo nie do końca rozumiem, co znaczy "Pełna"), a RabbitMQ mi nie działał normalnie (no i w ogóle nie do końca zrozumiałem o co w nim chodzi i nie podoba mi się pomysł instalowania dodatkowych rzeczy, które do tego jeszcze nie zawsze działaja)
+- ☠️ Inne niewymienione (np. Pełna autentyfikacja, Implementacja kolejekowania w RabbitMQ) - od __0pkt__ do __1pkt__ - autentyfikacja chyba jest już zrobiona (bo nie do końca rozumiem, co znaczy "Pełna"), dodałem też RabbitMQ zgodnie z tym, co było na zajęciach, ale nie mogę sprawdzić, czy działa
 
 Frontend najlepiej dodać w jakimś podkatalogu, np. MusicAppReact, aby mieć wszystko w jednym miejscu
 
