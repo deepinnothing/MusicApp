@@ -17,7 +17,7 @@ public class TracksController : ControllerBase
     {
         _database = database;
     }
-    
+
     [HttpGet("search")]
     public async Task<ActionResult<List<Track>>> SearchTracks(string query)
     {
@@ -28,7 +28,7 @@ public class TracksController : ControllerBase
             FilterDefinition<Track>? filter = Builders<Track>.Filter.Or(
                 Builders<Track>.Filter.Regex("title", new BsonRegularExpression(query, "i")),
                 Builders<Track>.Filter.Regex("artist", new BsonRegularExpression(query, "i")));
-            
+
             return await tracksCollection.Find(filter).ToListAsync();
         }
         catch (Exception ex)
@@ -37,7 +37,7 @@ public class TracksController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<List<Track>>> GetAllTracks()
     {
@@ -50,6 +50,58 @@ public class TracksController : ControllerBase
             List<Track>? tracks = await tracksCollection.Find(filter).ToListAsync();
 
             return Ok(tracks);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    //[Authorize(Roles = "admin")]
+    [HttpPost("{id}/upload")]
+    public async Task<ActionResult> UploadFile(string id, IFormFile file)
+    {
+        try
+        {
+            if (file.Length == 0 || Path.GetExtension(file.FileName).ToLower() != ".flac")
+                return StatusCode(StatusCodes.Status400BadRequest);
+
+            string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "assets/audio");
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+            string fileName = id + ".flac";
+
+            string filePath = Path.Combine(uploadPath, fileName);
+            using (FileStream fs = new(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fs);
+            }
+
+            return StatusCode(StatusCodes.Status201Created);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    [HttpGet("{id}/download")]
+    public ActionResult DownloadTrack(string id, [FromQuery] string? title, [FromQuery] string? artist)
+    {
+        try
+        {
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "assets/audio", id + ".flac");
+            if (!System.IO.File.Exists(filePath)) return StatusCode(StatusCodes.Status404NotFound);
+            
+            // Adding title and artist in the query is optional but makes the file's name look appropriate
+            string fileName = id + ".flac";
+            if (artist != null && title != null)
+                fileName = $"{artist} - {title}.flac";
+            
+            FileStream stream = new(filePath, FileMode.Open, FileAccess.Read);
+            return File(stream, "audio/flac", fileName);
         }
         catch (Exception ex)
         {

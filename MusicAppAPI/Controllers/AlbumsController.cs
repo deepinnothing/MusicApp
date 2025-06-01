@@ -143,6 +143,8 @@ public class AlbumsController : ControllerBase
             if (tracksToRemove.Count != 0)
                 bulkTrackOperations.Add(new DeleteManyModel<Track>(
                     Builders<Track>.Filter.In(t => t.Id, tracksToRemove)));
+            foreach (string trackId in tracksToRemove)
+                System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "assets/audio", trackId + ".flac"));
 
             if (bulkTrackOperations.Count != 0)
                 await tracksCollection.BulkWriteAsync(bulkTrackOperations);
@@ -171,12 +173,16 @@ public class AlbumsController : ControllerBase
             IMongoCollection<Album>? albumsCollection = _database.GetCollection<Album>("albums");
             FilterDefinition<Album>? filter = Builders<Album>.Filter.Eq(a => a.Id, id);
 
+            Album? album = await albumsCollection.Find(filter).FirstOrDefaultAsync();
             DeleteResult result = await albumsCollection.DeleteOneAsync(filter);
             if (result.DeletedCount == 0) return StatusCode(StatusCodes.Status404NotFound);
 
             // Remove all tracks of the album as well
             IMongoCollection<Track>? tracksCollection = _database.GetCollection<Track>("tracks");
             await tracksCollection.DeleteManyAsync(Builders<Track>.Filter.Eq(t => t.AlbumId, id));
+            
+            foreach (string trackId in album!.TrackIds!)
+                System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "assets/audio", trackId + ".flac"));
 
             return StatusCode(StatusCodes.Status200OK);
         }
