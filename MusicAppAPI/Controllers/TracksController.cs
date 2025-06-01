@@ -108,6 +108,8 @@ public class TracksController : ControllerBase
                 TrackDownloadedMessage message = new()
                 {
                     TrackId = id,
+                    TrackTitle = title,
+                    TrackArtist = artist,
                     DownloadedAt = DateTime.UtcNow,
                     Source = $"{Request.HttpContext.Connection.RemoteIpAddress}:{Request.HttpContext.Connection.RemotePort}"
                 };
