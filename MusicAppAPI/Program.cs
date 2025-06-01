@@ -83,7 +83,9 @@ builder.Services.AddCors(options =>
 });
 
 // Register RabbitMQ
-builder.Services.AddSingleton(RabbitHutch.CreateBus("host=localhost"));
+var rabbitMQHost = builder.Configuration.GetValue<string>("RabbitMQ:Host") ?? "rabbitmq";
+var connectionString = $"host={rabbitMQHost};port=5672;username=guest;password=guest;";
+builder.Services.AddSingleton(RabbitHutch.CreateBus(connectionString));
 
 WebApplication app = builder.Build();
 
@@ -94,7 +96,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+
+// Middleware to set RabbitMQ host in HttpContext.Items
+app.Use(async (context, next) =>
+{
+    context.Items["RabbitMQHost"] = rabbitMQHost;
+    await next(context);
+});
 
 app.UseCors();
 
