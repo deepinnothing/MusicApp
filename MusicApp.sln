@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicAppAPI", "MusicAppAPI\MusicAppAPI.csproj", "{A86A653B-0FFB-4C7D-B13D-5255A4F50FF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicAppAPIAnalytics", "MusicAppAPIAnalytics\MusicAppAPIAnalytics.csproj", "{64B5E7C3-0D04-442B-AFB5-617B8DABFED8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicAppAnalytics", "MusicAppAnalytics\MusicAppAnalytics.csproj", "{64B5E7C3-0D04-442B-AFB5-617B8DABFED8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

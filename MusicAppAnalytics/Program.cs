@@ -1,5 +1,5 @@
 using EasyNetQ;
-using MusicAppAPIAnalytics.Services;
+using MusicAppAnalytics.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

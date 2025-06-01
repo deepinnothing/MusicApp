@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using MusicAppAPI.Models;
 
-namespace MusicAppAPIAnalytics.Services;
+namespace MusicAppAnalytics.Services;
 
 public class AlbumAnalyticsService
 {

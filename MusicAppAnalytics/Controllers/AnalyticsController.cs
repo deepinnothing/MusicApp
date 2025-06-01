@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using MusicAppAPIAnalytics.Services;
+using MusicAppAnalytics.Services;
 
-namespace MusicAppAPIAnalytics.Controllers;
+namespace MusicAppAnalytics.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -1,4 +1,4 @@
-namespace MusicAppAPIAnalytics;
+namespace MusicAppAnalytics;
 
 public class WeatherForecast
 {
