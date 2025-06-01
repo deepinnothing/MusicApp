@@ -58,7 +58,7 @@ public class TracksController : ControllerBase
         }
     }
 
-    //[Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     [HttpPost("{id}/upload")]
     public async Task<ActionResult> UploadFile(string id, IFormFile file)
     {
