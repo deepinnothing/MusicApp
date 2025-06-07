@@ -96,8 +96,9 @@ public class UserService : IUserService
         ClaimsIdentity ci = new();
   
         ci.AddClaim(new Claim("id", user.Id!));
-        foreach (string role in user.Roles!)
-            ci.AddClaim(new Claim(ClaimTypes.Role, role));
+        if (user.Roles != null)
+            foreach (string role in user.Roles)
+                ci.AddClaim(new Claim(ClaimTypes.Role, role));
           
         return ci;
     }

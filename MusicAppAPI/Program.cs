@@ -84,7 +84,7 @@ builder.Services.AddCors(options =>
 
 // Register RabbitMQ
 var rabbitMQHost = builder.Configuration.GetValue<string>("RabbitMQ:Host") ?? "rabbitmq";
-var connectionString = $"host={rabbitMQHost};port=5672;username=guest;password=guest;";
+var connectionString = $"host={rabbitMQHost};port=5672;username=guest;password=guest";
 builder.Services.AddSingleton(RabbitHutch.CreateBus(connectionString));
 
 WebApplication app = builder.Build();
