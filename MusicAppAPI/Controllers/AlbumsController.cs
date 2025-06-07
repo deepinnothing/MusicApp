@@ -254,9 +254,10 @@ public class AlbumsController : ControllerBase
         {
             IMongoCollection<Album>? albumsCollection = _database.GetCollection<Album>("albums");
             // Search by titles and artists
+            string escapedQuery = System.Text.RegularExpressions.Regex.Escape(query);
             FilterDefinition<Album>? filter = Builders<Album>.Filter.Or(
-                Builders<Album>.Filter.Regex("title", new BsonRegularExpression(query, "i")),
-                Builders<Album>.Filter.Regex("artist", new BsonRegularExpression(query, "i")));
+                Builders<Album>.Filter.Regex("title", new BsonRegularExpression($"^{escapedQuery}", "i")),
+                Builders<Album>.Filter.Regex("artist", new BsonRegularExpression($"^{escapedQuery}", "i")));
 
             // Multiple albums might be returned, and tracks could create too much boilerplate
             ProjectionDefinition<Album>? projection = Builders<Album>.Projection.Exclude("tracks");

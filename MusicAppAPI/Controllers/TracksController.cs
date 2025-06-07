@@ -27,9 +27,10 @@ public class TracksController : ControllerBase
         {
             IMongoCollection<Track>? tracksCollection = _database.GetCollection<Track>("tracks");
             // Search by titles and artists
+            string escapedQuery = System.Text.RegularExpressions.Regex.Escape(query);
             FilterDefinition<Track>? filter = Builders<Track>.Filter.Or(
-                Builders<Track>.Filter.Regex("title", new BsonRegularExpression(query, "i")),
-                Builders<Track>.Filter.Regex("artist", new BsonRegularExpression(query, "i")));
+                Builders<Track>.Filter.Regex("title", new BsonRegularExpression($"^{escapedQuery}", "i")),
+                Builders<Track>.Filter.Regex("artist", new BsonRegularExpression($"^{escapedQuery}", "i")));
 
             return await tracksCollection.Find(filter).ToListAsync();
         }
