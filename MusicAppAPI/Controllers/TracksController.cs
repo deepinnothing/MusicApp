@@ -91,7 +91,7 @@ public class TracksController : ControllerBase
     }
 
     [HttpGet("{id}/download")]
-    public async Task<ActionResult> DownloadTrack(string id, [FromQuery] string? title, [FromQuery] string? artist)
+    public ActionResult DownloadTrack(string id, [FromQuery] string? title, [FromQuery] string? artist)
     {
         try
         {
