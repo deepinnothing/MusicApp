@@ -104,23 +104,28 @@ public class TracksController : ControllerBase
                 fileName = $"{artist} - {title}.flac";
             
             // Send a message to RabbitMQ to track downloads
-            try
+            // (do not await for it to finish in case RabbitMQ is not available)
+            Task.Run(async () =>
             {
-                TrackDownloadedMessage message = new()
+                try
                 {
-                    TrackId = id,
-                    TrackTitle = title,
-                    TrackArtist = artist,
-                    DownloadedAt = DateTime.UtcNow,
-                    Source = $"{Request.HttpContext.Connection.RemoteIpAddress}:{Request.HttpContext.Connection.RemotePort}"
-                };
+                    TrackDownloadedMessage message = new()
+                    {
+                        TrackId = id,
+                        TrackTitle = title,
+                        TrackArtist = artist,
+                        DownloadedAt = DateTime.UtcNow,
+                        Source =
+                            $"{Request.HttpContext.Connection.RemoteIpAddress}:{Request.HttpContext.Connection.RemotePort}"
+                    };
 
-                await _rabbitMQBus.PubSub.PublishAsync(message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+                    await _rabbitMQBus.PubSub.PublishAsync(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            });
             
             // Return the response even if RabbitMQ is down
             FileStream stream = new(filePath, FileMode.Open, FileAccess.Read);

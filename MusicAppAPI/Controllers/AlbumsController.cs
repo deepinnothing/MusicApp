@@ -217,7 +217,8 @@ public class AlbumsController : ControllerBase
                 track.AlbumId = null;
             }
 
-            // Send a message to RabbitMQ to track album views (do not await for it to finish)
+            // Send a message to RabbitMQ to track album views
+            // (do not await for it to finish in case RabbitMQ is not available)
             Task.Run(async () =>
             {
                 try
