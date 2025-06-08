@@ -18,13 +18,23 @@ public class LibraryController : ControllerBase
         _database = database;
     }
     
+    public class AlbumIdRequest
+    {
+        public string albumId { get; set; } = "";
+    }
+    
+    public class TrackIdRequest
+    {
+        public string trackId { get; set; } = "";
+    }
+    
     [HttpGet("tracks")]
-    public async Task<ActionResult> GetAllTracks([FromServices] ClaimsPrincipal user)
+    public async Task<ActionResult> GetAllTracks()
     {
         try
         {
             // Get user id from the JWT token
-            string? userId = user.FindFirst("id")?.Value;
+            string? userId = HttpContext.User.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(userId)) return StatusCode(StatusCodes.Status401Unauthorized);
             
             // Find the user in the database to get access to the user's library
@@ -46,12 +56,12 @@ public class LibraryController : ControllerBase
     }
     
     [HttpPatch("tracks")]
-    public async Task<ActionResult> AddTrack([FromBody] string trackId, [FromServices] ClaimsPrincipal user)
+    public async Task<ActionResult> AddTrack([FromBody] string trackId)
     {
         try
         {
             // Get user id from the JWT token
-            string? userId = user.FindFirst("id")?.Value;
+            string? userId = HttpContext.User.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(userId)) return StatusCode(StatusCodes.Status401Unauthorized);
             
             // Find the user in the database to get access to the user's library
@@ -70,13 +80,13 @@ public class LibraryController : ControllerBase
         }
     }
     
-    [HttpDelete("tracks")]
-    public async Task<ActionResult> RemoveTrack([FromBody] string trackId, [FromServices] ClaimsPrincipal user)
+    [HttpDelete("tracks/{trackId}")]
+    public async Task<ActionResult> RemoveTrack(string trackId)
     {
         try
         {
             // Get user id from the JWT token
-            string? userId = user.FindFirst("id")?.Value;
+            string? userId = HttpContext.User.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(userId)) return StatusCode(StatusCodes.Status401Unauthorized);
             
             // Find the user in the database to get access to the user's library
@@ -98,12 +108,12 @@ public class LibraryController : ControllerBase
     }
     
     [HttpGet("album")]
-    public async Task<ActionResult<List<Album>>> GetAllAlbums([FromServices] ClaimsPrincipal user)
+    public async Task<ActionResult<List<Album>>> GetAllAlbums()
     {
         try
         {
             // Get user id from the JWT token
-            string? userId = user.FindFirst("id")?.Value;
+            string? userId = HttpContext.User.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(userId)) return StatusCode(StatusCodes.Status401Unauthorized);
             
             // Find the user in the database to get access to the user's library
@@ -128,12 +138,12 @@ public class LibraryController : ControllerBase
     }
     
     [HttpPatch("albums")]
-    public async Task<ActionResult> AddAlbum([FromBody] string albumId, [FromServices] ClaimsPrincipal user)
+    public async Task<ActionResult> AddAlbum([FromBody] string albumId)
     {
         try
         {
             // Get user id from the JWT token
-            string? userId = user.FindFirst("id")?.Value;
+            string? userId = HttpContext.User.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(userId)) return StatusCode(StatusCodes.Status401Unauthorized);
             
             // Find the user in the database to get the user's library
@@ -153,13 +163,13 @@ public class LibraryController : ControllerBase
         }
     }
     
-    [HttpDelete("albums")]
-    public async Task<ActionResult> RemoveAlbum([FromBody] string albumId, [FromServices] ClaimsPrincipal user)
+    [HttpDelete("albums/{albumId}")]
+    public async Task<ActionResult> RemoveAlbum(string albumId)
     {
         try
         {
             // Get user id from the JWT token
-            string? userId = user.FindFirst("id")?.Value;
+            string? userId = HttpContext.User.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(userId)) return StatusCode(StatusCodes.Status401Unauthorized);
             
             // Find the user in the database to get the user's library
