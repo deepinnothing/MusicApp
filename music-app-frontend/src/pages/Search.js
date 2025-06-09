@@ -94,16 +94,14 @@ const Search = () => {
               </div>
             )}
 
-            <h3 className="text-lg font-semibold mb-4 text-white">
-              {searchQuery.trim() !== ""
-                ? isDebouncing
-                  ? "Type to search..."
-                  : searchResults.length > 0
-                  ? `Found ${searchResults.length} results for "${searchQuery}"`
-                  : loading
-                  ? "Type to search..."
-                  : `No results found for "${searchQuery}"`
-                : "Type to search..."}
+           <h3 className="text-lg font-semibold mb-4 text-white">
+              {searchQuery.trim() === ""
+                ? "Type to search..."
+                : searchResults.length > 0
+                ? `Found ${searchResults.length} results for "${searchQuery}"`
+                : loading || isDebouncing
+                ? "Searching..."
+                : `No results found for "${searchQuery}"`}
             </h3>
 
             <div className="grid grid-cols-4 gap-6 overflow-visible">
