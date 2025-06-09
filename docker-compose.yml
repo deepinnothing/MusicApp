@@ -18,7 +18,7 @@ services:
       context: ./MusicAppAPI
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "5064:80"
     environment:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Development
@@ -26,6 +26,10 @@ services:
       - RabbitMQ__Port=5672
       - RabbitMQ__Username=guest
       - RabbitMQ__Password=guest
+      - DB_USER=deepinnothing
+      - DB_PASSWORD=pass123
+      - DB_NAME=music_store
+      - JWT_KEY=super-duper-secret-jwt-key-1234567890
     depends_on:
       - rabbitmq
     networks:
@@ -36,7 +40,7 @@ services:
       context: ./MusicAppAnalytics
       dockerfile: Dockerfile
     ports:
-      - "8081:80"
+      - "5048:80"
     environment:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Development

@@ -8,7 +8,6 @@
       "applicationUrl": "https://localhost:7074;http://localhost:5064",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "PORT": "7074",
         "DB_USER": "deepinnothing",
         "DB_PASSWORD": "pass123",
         "DB_NAME": "music_store",
