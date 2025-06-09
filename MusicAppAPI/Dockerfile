@@ -28,6 +28,13 @@ ENV RabbitMQ__Password="guest"
 ENV DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION=1
 ENV COMPlus_EnableDiagnostics=0
 
+# Set environment variables for MongoDB
+ENV DB_USER="deepinnothing"
+ENV DB_PASSWORD="pass123"
+ENV DB_NAME="music_store"
+
+ENV JWT_KEY="super-duper-secret-jwt-key-1234567890"
+
 EXPOSE 80
 
 # Start the application
