@@ -76,7 +76,7 @@ const AlbumCard = ({ album }) => {
 
   return (
     <div
-      className="bg-black/40 backdrop-blur-sm rounded-lg border border-purple-500/20 cursor-pointer group hover:bg-black/60 transition-all duration-300 relative w-full aspect-square flex flex-col"
+      className="bg-black/40 backdrop-blur-sm rounded-lg border border-purple-500/20 cursor-pointer group hover:bg-black/60 transition-all duration-300 relative w-full flex flex-col"
       onClick={handleCardClick}
     >
       <div className="relative flex-1 overflow-hidden rounded-t-lg">
@@ -91,7 +91,7 @@ const AlbumCard = ({ album }) => {
           </button>
         </div>
       </div>
-      <div className="flex justify-between items-center px-3 py-2 min-h-[60px] bg-black/40 relative">
+      <div className="flex justify-between items-center px-3 py-2 min-h-[60px] bg-black/40 relative rounded-b-lg">
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-semibold text-white truncate">
             {album.title}

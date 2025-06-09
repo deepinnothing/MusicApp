@@ -392,7 +392,7 @@ const AlbumDetails = () => {
 
             <div className="space-y-1 overflow-visible">
               {album.tracks &&
-                album.tracks.map((song, index) => (
+                album.tracks.sort((a,b) => a.nr - b.nr).map((song, index) => (
                   <div
                     key={song._id || song.id || index}
                     className="group flex items-center justify-between py-2 px-3 bg-white/5 backdrop-blur-sm rounded-lg hover:bg-white/10 transition-all duration-300 border border-transparent hover:border-purple-500/30"
