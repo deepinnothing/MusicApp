@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AlbumCard from "../components/user/AlbumCard";
+import AlbumCard, { AddAlbumCard } from "../components/user/AlbumCard";
 import { albumService } from "../services/albumService";
 
 const FeaturedAlbums = () => {
@@ -55,6 +55,8 @@ const FeaturedAlbums = () => {
         {albums.map((album) => (
           <AlbumCard key={album._id || album.id} album={album} />
         ))}
+
+        <AddAlbumCard />
       </div>
     </div>
   );
