@@ -47,12 +47,9 @@ export const apiRequest = async (url, options = {}) => {
     }
 
     // funkcja sprawdzająca czy odpowiedź jest formacie json, tak- parsuje, nie- zwraca status o sukcesie
-   const contentType = response.headers.get("content-type");
+    const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
-      const text = await response.text();
-      if (text) {
-        return JSON.parse(text);
-      }
+      return await response.json();
     }
 
     return { success: true, status: response.status };
