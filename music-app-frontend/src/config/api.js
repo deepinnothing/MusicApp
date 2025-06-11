@@ -62,4 +62,9 @@ export const apiRequest = async (url, options = {}) => {
   }
 };
 
+export const deleteAlbum = async (id) => {
+  const url = API_ENDPOINTS.albums.delete(id);
+  return await apiRequest(url, { method: "DELETE" });
+};
+
 export default API_BASE_URL;
