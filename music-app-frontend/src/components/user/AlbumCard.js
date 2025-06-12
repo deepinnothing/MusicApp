@@ -109,12 +109,10 @@ const AlbumCard = ({ album }) => {
       }
   };
 
-  const handleEditClick = (e) => {
+  const handleEditClick = async (e) => {
     e.stopPropagation();
-    setEditData({
-      ...album,
-      tracks: Array.isArray(album.tracks) ? album.tracks : [],
-    });
+    const albumDataToEdit = await albumService.getAlbumById(album.id);
+    setEditData(albumDataToEdit);
     setIsEditModalOpen(true);
   };
 
@@ -172,7 +170,7 @@ const AlbumCard = ({ album }) => {
       onClick={handleCardClick}
     >
       {isLoggedIn && isAdmin && (
-        <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+        <div className="absolute top-2 right-2 flex flex-row-reverse gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
           <button
             className="text-gray-400 hover:text-red-500 transition-colors"
             onClick={handleDelete}
@@ -264,124 +262,124 @@ const AlbumCard = ({ album }) => {
                 <IoMdCloseCircle className="w-7 h-7" />
               </button>
               <h2 className="text-lg font-semibold mb-4 text-gray-800">
-                Edytuj album
+                Edit album
               </h2>
               <form onSubmit={handleEditSubmit} className="space-y-4">
+
                 <div className="grid grid-cols-2 gap-4">
                   <input
-                    type="text"
-                    name="title"
-                    placeholder="Tytuł albumu"
-                    value={editData.title || ""}
-                    onChange={handleEditAlbumChange}
-                    required
-                    className="border px-3 py-2 rounded"
+                      type="text"
+                      name="title"
+                      placeholder="Album title"
+                      value={editData.title}
+                      onChange={handleEditAlbumChange}
+                      required
+                      className="border px-3 py-2 rounded"
                   />
                   <input
-                    type="text"
-                    name="artist"
-                    placeholder="Artysta"
-                    value={editData.artist || ""}
-                    onChange={handleEditAlbumChange}
-                    required
-                    className="border px-3 py-2 rounded"
+                      type="text"
+                      name="artist"
+                      placeholder="Artist"
+                      value={editData.artist}
+                      onChange={handleEditAlbumChange}
+                      required
+                      className="border px-3 py-2 rounded"
                   />
                   <input
-                    type="number"
-                    name="year"
-                    placeholder="Rok"
-                    value={editData.year || ""}
-                    onChange={handleEditAlbumChange}
-                    className="border px-3 py-2 rounded"
+                      type="number"
+                      name="year"
+                      placeholder="Year"
+                      value={editData.year}
+                      onChange={handleEditAlbumChange}
+                      required
+                      className="border px-3 py-2 rounded"
                   />
                   <input
-                    type="text"
-                    name="label"
-                    placeholder="Wytwórnia"
-                    value={editData.label || ""}
-                    onChange={handleEditAlbumChange}
-                    className="border px-3 py-2 rounded"
+                      type="text"
+                      name="label"
+                      placeholder="Label"
+                      value={editData.label}
+                      onChange={handleEditAlbumChange}
+                      className="border px-3 py-2 rounded"
                   />
                   <input
-                    type="text"
-                    name="coverUrl"
-                    placeholder="URL okładki"
-                    value={editData.coverUrl || ""}
-                    onChange={handleEditAlbumChange}
-                    className="col-span-2 border px-3 py-2 rounded"
+                      type="text"
+                      name="coverUrl"
+                      placeholder="Link to the cover image"
+                      value={editData.coverUrl}
+                      onChange={handleEditAlbumChange}
+                      className="col-span-2 border px-3 py-2 rounded"
                   />
                 </div>
+
                 <div className="mt-6">
-                  <h3 className="font-semibold text-gray-700 mb-2">Utwory</h3>
-                  {editData.tracks?.map((track, index) => (
-                    <div key={index} className="grid grid-cols-6 gap-2 mb-2 items-center">
-                      <input
-                        type="text"
-                        name="title"
-                        placeholder="Tytuł"
-                        value={track.title}
-                        onChange={(e) => handleEditTrackChange(index, e)}
-                        className="col-span-2 border px-2 py-1 rounded"
-                        required
-                      />
-                      <input
-                        type="text"
-                        name="artist"
-                        placeholder="Artysta"
-                        value={track.artist}
-                        onChange={(e) => handleEditTrackChange(index, e)}
-                        className="border px-2 py-1 rounded"
-                      />
-                      <input
-                        type="number"
-                        name="year"
-                        placeholder="Rok"
-                        value={track.year}
-                        onChange={(e) => handleEditTrackChange(index, e)}
-                        className="border px-2 py-1 rounded"
-                      />
-                      <input
-                        type="number"
-                        name="length"
-                        placeholder="Długość (sekundy)"
-                        value={track.length}
-                        onChange={(e) => handleEditTrackChange(index, e)}
-                        required
-                        className="border px-2 py-1 rounded"
-                      />
-                      <input
-                        type="text"
-                        name="genre"
-                        placeholder="Gatunek"
-                        value={track.genre}
-                        onChange={(e) => handleEditTrackChange(index, e)}
-                        className="border px-2 py-1 rounded"
-                      />
-                      <input
-                        type="number"
-                        name="nr"
-                        placeholder="Nr"
-                        value={track.nr}
-                        onChange={(e) => handleEditTrackChange(index, e)}
-                        className="border px-2 py-1 rounded"
-                      />
-                      {editData.tracks.length > 1 && (
+                  <h3 className="font-semibold text-gray-700 mb-2">Tracks</h3>
+                  {editData.tracks.map((track, index) => (
+                      <div key={index} className="grid grid-cols-6 gap-2 mb-2 items-center">
+                        <input
+                            type="text"
+                            name="title"
+                            placeholder="Title"
+                            value={track.title}
+                            onChange={(e) => handleEditTrackChange(index, e)}
+                            className="col-span-2 border px-2 py-1 rounded"
+                            required
+                        />
+                        <input
+                            type="text"
+                            name="artist"
+                            placeholder="Artist"
+                            value={track.artist}
+                            onChange={(e) => handleEditTrackChange(index, e)}
+                            className="col-span-2 border px-2 py-1 rounded"
+                        />
+                        <input
+                            type="number"
+                            name="length"
+                            placeholder="Length (seconds)"
+                            value={track.length}
+                            onChange={(e) => handleEditTrackChange(index, e)}
+                            required
+                            className="col-span-2 border px-2 py-1 rounded"
+                        />
+                        <input
+                            type="text"
+                            name="genre"
+                            placeholder="Genre"
+                            value={track.genre}
+                            onChange={(e) => handleEditTrackChange(index, e)}
+                            className="col-span-2 border px-2 py-1 rounded"
+                        />
+                        <input
+                            type="number"
+                            name="year"
+                            placeholder="Year"
+                            value={track.year}
+                            onChange={(e) => handleEditTrackChange(index, e)}
+                            className="border px-2 py-1 rounded"
+                        />
+                        <input
+                            type="number"
+                            name="nr"
+                            placeholder="Number"
+                            value={track.nr}
+                            onChange={(e) => handleEditTrackChange(index, e)}
+                            className="border px-2 py-1 rounded"
+                        />
                         <button
-                          type="button"
-                          onClick={() => handleRemoveEditTrack(index)}
-                          className="text-red-500 hover:text-red-700 text-sm"
-                        >
-                          Usuń
+                            type="button"
+                            onClick={() => handleRemoveEditTrack(index)}
+                            className="col-span-2 bg-red-500 px-2 py-1 text-white hover:bg-red-700 rounded">
+                          Remove
                         </button>
-                      )}
-                    </div>
+                      </div>
                   ))}
                   <button
-                    type="button"
-                    onClick={handleAddEditTrack}
-                    className="mt-2 text-blue-500 hover:underline text-sm"
+                      type="button"
+                      onClick={handleAddEditTrack}
+                      className="mt-2 text-blue-500 hover:underline text-sm"
                   >
-                    + Dodaj kolejny utwór
+                    + Add another track
                   </button>
                 </div>
 
@@ -389,7 +387,7 @@ const AlbumCard = ({ album }) => {
                   type="submit"
                   className="mt-4 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
                 >
-                  Zapisz zmiany
+                  Save changes
                 </button>
               </form>
             </div>
@@ -516,7 +514,7 @@ export const AddAlbumCard = () => {
               <IoMdCloseCircle className="w-7 h-7" />
             </button>
             <h2 className="text-lg font-semibold mb-4 text-gray-800">
-              Dodaj nowy album
+              Add new album
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -524,7 +522,7 @@ export const AddAlbumCard = () => {
                 <input
                   type="text"
                   name="title"
-                  placeholder="Tytuł albumu"
+                  placeholder="Album title"
                   value={albumData.title}
                   onChange={handleAlbumChange}
                   required
@@ -533,7 +531,7 @@ export const AddAlbumCard = () => {
                 <input
                   type="text"
                   name="artist"
-                  placeholder="Artysta"
+                  placeholder="Artist"
                   value={albumData.artist}
                   onChange={handleAlbumChange}
                   required
@@ -542,7 +540,7 @@ export const AddAlbumCard = () => {
                 <input
                   type="number"
                   name="year"
-                  placeholder="Rok"
+                  placeholder="Year"
                   value={albumData.year}
                   onChange={handleAlbumChange}
                   required
@@ -551,7 +549,7 @@ export const AddAlbumCard = () => {
                 <input
                   type="text"
                   name="label"
-                  placeholder="Wytwórnia"
+                  placeholder="Label"
                   value={albumData.label}
                   onChange={handleAlbumChange}
                   className="border px-3 py-2 rounded"
@@ -559,7 +557,7 @@ export const AddAlbumCard = () => {
                 <input
                   type="text"
                   name="coverUrl"
-                  placeholder="Link do okładki"
+                  placeholder="Link to the cover image"
                   value={albumData.coverUrl}
                   onChange={handleAlbumChange}
                   className="col-span-2 border px-3 py-2 rounded"
@@ -567,13 +565,13 @@ export const AddAlbumCard = () => {
               </div>
 
               <div className="mt-6">
-                <h3 className="font-semibold text-gray-700 mb-2">Utwory</h3>
+                <h3 className="font-semibold text-gray-700 mb-2">Tracks</h3>
                 {albumData.tracks.map((track, index) => (
                   <div key={index} className="grid grid-cols-6 gap-2 mb-2 items-center">
                     <input
                       type="text"
                       name="title"
-                      placeholder="Tytuł"
+                      placeholder="Title"
                       value={track.title}
                       onChange={(e) => handleTrackChange(index, e)}
                       className="col-span-2 border px-2 py-1 rounded"
@@ -582,53 +580,50 @@ export const AddAlbumCard = () => {
                     <input
                       type="text"
                       name="artist"
-                      placeholder="Artysta"
+                      placeholder="Artist"
                       value={track.artist}
-                      onChange={(e) => handleTrackChange(index, e)}
-                      className="border px-2 py-1 rounded"
-                    />
-                    <input
-                      type="number"
-                      name="year"
-                      placeholder="Rok"
-                      value={track.year}
                       onChange={(e) => handleTrackChange(index, e)}
                       className="col-span-2 border px-2 py-1 rounded"
                     />
                     <input
-                      type="number"
-                      name="length"
-                      placeholder="Długość (sekundy)"
-                      value={track.length}
-                      onChange={(e) => handleTrackChange(index, e)}
-                      required
-                      className="border px-2 py-1 rounded"
+                        type="number"
+                        name="length"
+                        placeholder="Length (seconds)"
+                        value={track.length}
+                        onChange={(e) => handleTrackChange(index, e)}
+                        required
+                        className="col-span-2 border px-2 py-1 rounded"
                     />
                     <input
-                      type="text"
-                      name="genre"
-                      placeholder="Gatunek"
-                      value={track.genre}
+                        type="text"
+                        name="genre"
+                        placeholder="Genre"
+                        value={track.genre}
+                        onChange={(e) => handleTrackChange(index, e)}
+                        className="col-span-2 border px-2 py-1 rounded"
+                    />
+                    <input
+                      type="number"
+                      name="year"
+                      placeholder="Year"
+                      value={track.year}
                       onChange={(e) => handleTrackChange(index, e)}
                       className="border px-2 py-1 rounded"
                     />
                     <input
                       type="number"
                       name="nr"
-                      placeholder="Nr"
+                      placeholder="Number"
                       value={track.nr}
                       onChange={(e) => handleTrackChange(index, e)}
                       className="border px-2 py-1 rounded"
                     />
-                    {albumData.tracks.length > 1 && (
-                      <button
+                    <button
                         type="button"
                         onClick={() => handleRemoveTrack(index)}
-                        className="text-red-500 hover:text-red-700 text-sm"
-                      >
-                        Usuń
-                      </button>
-                    )}
+                        className="col-span-2 bg-red-500 px-2 py-1 text-white hover:bg-red-700 rounded">
+                        Remove
+                    </button>
                   </div>
                 ))}
                 <button
@@ -636,7 +631,7 @@ export const AddAlbumCard = () => {
                   onClick={handleAddTrack}
                   className="mt-2 text-blue-500 hover:underline text-sm"
                 >
-                  + Dodaj kolejny utwór
+                  + Add another track
                 </button>
               </div>
 
@@ -644,7 +639,7 @@ export const AddAlbumCard = () => {
                 type="submit"
                 className="mt-4 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
               >
-                Zapisz album
+                Add album
               </button>
             </form>
           </div>

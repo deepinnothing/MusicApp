@@ -95,17 +95,17 @@ public class AlbumsController : ControllerBase
     {
         try
         {
+            if (albumUpdate.Title is null) return StatusCode(StatusCodes.Status400BadRequest, "Title must be specified.");
+            if (albumUpdate.Artist is null) return StatusCode(StatusCodes.Status400BadRequest, "Artist must be specified.");
+            if (albumUpdate.Year is null) return StatusCode(StatusCodes.Status400BadRequest, "Year must be specified.");
+            if (albumUpdate.Tracks == null || albumUpdate.Tracks.Count == 0)
+                return StatusCode(StatusCodes.Status400BadRequest, "Album must have at least one track.");
+            
             // Fetch existing album to get trackIds
             IMongoCollection<Album> albumsCollection = _database.GetCollection<Album>("albums");
             FilterDefinition<Album> filter = Builders<Album>.Filter.Eq(a => a.Id, id);
             Album? album = await albumsCollection.Find(filter).FirstOrDefaultAsync();
             if (album == null) return StatusCode(StatusCodes.Status404NotFound);
-
-            if (album.Title is null) return StatusCode(StatusCodes.Status400BadRequest, "Title must be specified.");
-            if (album.Artist is null) return StatusCode(StatusCodes.Status400BadRequest, "Artist must be specified.");
-            if (album.Year is null) return StatusCode(StatusCodes.Status400BadRequest, "Year must be specified.");
-            if (album.Tracks == null || album.Tracks.Count == 0)
-                return StatusCode(StatusCodes.Status400BadRequest, "Album must have at least one track.");
 
             // Validate tracks
             if (albumUpdate.Tracks!.Any(t => t.Title == null || t.Length == null))
@@ -147,14 +147,18 @@ public class AlbumsController : ControllerBase
                 bulkTrackOperations.Add(new DeleteManyModel<Track>(
                     Builders<Track>.Filter.In(t => t.Id, tracksToRemove)));
             foreach (string trackId in tracksToRemove)
-                System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "assets/audio", trackId + ".flac"));
+            {
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "assets/audio", trackId + ".flac");
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
 
             if (bulkTrackOperations.Count != 0)
                 await tracksCollection.BulkWriteAsync(bulkTrackOperations);
             
             // Only track ids are stored with the album in the database
-            album.TrackIds = album.Tracks.Select(t => t.Id!).ToList();
-            album.Tracks = null;
+            albumUpdate.TrackIds = albumUpdate.Tracks.Select(t => t.Id!).ToList();
+            albumUpdate.Tracks = null;
             
             await albumsCollection.ReplaceOneAsync(filter, albumUpdate);
 
