@@ -13,11 +13,11 @@ __Na co zwrócić uwagę (API):__
 __Postęp (Programowanie Aplikacji Rozproszonych):__
 - ✅ Back-end dla wszystkich metod CRUD dla jednej encji w architekturze REST - __1pkt__ - jest zrobione dla encji Album
 - ✅ Zastosowanie realnej bazy danych, np. MsSQL - __1pkt__ - jest zastosowana MongoDB
-- 🆘 Osobna aplikacja Front-endowa wykorzystująca wszystkie funkcje CRUD dla API - __1pkt__
+- ✅ Osobna aplikacja Front-endowa wykorzystująca wszystkie funkcje CRUD dla API - __1pkt__ - większość endpointów (włącznie z tymi z punktu pierwszego) są zaimplementowane w kliencie React
 - ✅ Obsługa błędów try-catch wraz ze zwracaniem odpowiedzi (kod i komunikat) - __0.5pkt__ - chyba zrobione
-- ✅ Przesyłanie/pobieranie danych binarnych (dokumenty) - __0.5pkt__ - dodałem możliwość przeysłania i pobierania plików FLAC
-- ✅ Inne niewymienione (np. Pełna autentyfikacja, Implementacja kolejekowania w RabbitMQ) - od __0pkt__ do __1pkt__ - autentyfikacja chyba jest już zrobiona (bo nie do końca rozumiem, co znaczy "Pełna"), dodałem też RabbitMQ i Docker zgodnie z tym, co było na zajęciach, ale nie mogę sprawdzić, czy działają
+- ✅ Przesyłanie/pobieranie danych binarnych (dokumenty) - __0.5pkt__ - możliwość przesyłania i pobierania plików FLAC (po id utworu)
+- ✅ Inne niewymienione (np. Pełna autentyfikacja, Implementacja kolejekowania w RabbitMQ) - od __0pkt__ do __1pkt__ - autentyfikacja chyba również jest zrobiona (bo nie do końca jest zrozumiałe, co znaczy "Pełna"), dodano też RabbitMQ i Docker zgodnie z tym, co było na zajęciach
 
-Frontend najlepiej dodać w jakimś podkatalogu, np. MusicAppReact, aby mieć wszystko w jednym miejscu
+Frontend i informacja go dotycząca znajdują się w odpowiednim podkatalogu
 
-W bazie danych już znajdują się niektóre dane (ale użytkowników na razie nie ma żadnych), jednak prosiłbym póki co niczego stamtąd nie usuwać, bo ręczne wpisywanie wszystkiego zajeło mi trochę czasu :)
+Nie wszystko w tej chwili jest dostępne w aplikacji frontendowej. Niektóre niezaimplemetowane endpointy można sprawdzić za pomocą np. Swaggera.
