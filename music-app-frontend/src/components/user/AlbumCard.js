@@ -250,9 +250,9 @@ const AlbumCard = ({ album }) => {
       </div>
       {isEditModalOpen &&
         ReactDOM.createPortal(
-          <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center overflow-auto">
+          <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
             <div 
-              className="bg-white rounded-xl p-6 w-full max-w-2xl relative"
+              className="bg-white rounded-xl p-6 pr-0 w-full max-w-2xl relative"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -264,7 +264,7 @@ const AlbumCard = ({ album }) => {
               <h2 className="text-lg font-semibold mb-4 text-gray-800">
                 Edit album
               </h2>
-              <form onSubmit={handleEditSubmit} className="space-y-4">
+              <form onSubmit={handleEditSubmit} className="space-y-4 max-h-[calc(100vh-10rem)] pr-6 overflow-y-auto">
 
                 <div className="grid grid-cols-2 gap-4">
                   <input
@@ -505,8 +505,8 @@ export const AddAlbumCard = () => {
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center overflow-auto">
-          <div className="bg-white rounded-xl p-6 w-full max-w-2xl relative">
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-xl p-6 pr-0 w-full max-w-2xl relative">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
               onClick={() => setIsModalOpen(false)}
@@ -517,7 +517,7 @@ export const AddAlbumCard = () => {
               Add new album
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 max-h-[calc(100vh-10rem)] pr-6 overflow-y-auto">
               <div className="grid grid-cols-2 gap-4">
                 <input
                   type="text"
