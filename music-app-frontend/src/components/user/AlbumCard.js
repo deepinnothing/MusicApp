@@ -270,7 +270,7 @@ const AlbumCard = ({ album }) => {
                   <input
                       type="text"
                       name="title"
-                      placeholder="Album title"
+                      placeholder="Title"
                       value={editData.title}
                       onChange={handleEditAlbumChange}
                       required
@@ -361,7 +361,7 @@ const AlbumCard = ({ album }) => {
                         <input
                             type="number"
                             name="nr"
-                            placeholder="Number"
+                            placeholder="Nr"
                             value={track.nr}
                             onChange={(e) => handleEditTrackChange(index, e)}
                             className="border px-2 py-1 rounded"
@@ -522,7 +522,7 @@ export const AddAlbumCard = () => {
                 <input
                   type="text"
                   name="title"
-                  placeholder="Album title"
+                  placeholder="Title"
                   value={albumData.title}
                   onChange={handleAlbumChange}
                   required
@@ -613,7 +613,7 @@ export const AddAlbumCard = () => {
                     <input
                       type="number"
                       name="nr"
-                      placeholder="Number"
+                      placeholder="Nr"
                       value={track.nr}
                       onChange={(e) => handleTrackChange(index, e)}
                       className="border px-2 py-1 rounded"
