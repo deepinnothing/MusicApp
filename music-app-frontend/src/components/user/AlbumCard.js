@@ -125,12 +125,12 @@ const AlbumCard = ({ album }) => {
     e.preventDefault();
     try {
       await albumService.updateAlbum(editData._id || editData.id, editData);
-      toast.success("Album zaktualizowany!");
+      toast.success("Album updated successfully!");
       setIsEditModalOpen(false);
       window.location.reload();
     } catch (error) {
       console.error("Update failed:", error);
-      toast.error("Nie udało się zaktualizować albumu.");
+      toast.error("Album update hasn't succed.");
     }
   };
 
@@ -461,13 +461,13 @@ export const AddAlbumCard = () => {
     
     // Walidacja: przynajmniej 1 utwór i wymagane pola
     if (!albumData.title || !albumData.artist || albumData.tracks.length < 1) {
-      toast.error("Album musi zawierać tytuł, wykonawcę i co najmniej 1 utwór.");
+      toast.error("Album must have a title, an artist, a release year and at least one track.");
       return;
     }
 
     try {
       await albumService.createAlbum(albumData);
-      toast.success("Album został dodany!");
+      toast.success("Album added successfully!");
       setIsModalOpen(false);
       setAlbumData({
         title: "",
@@ -488,7 +488,7 @@ export const AddAlbumCard = () => {
       });
       window.location.reload();
     } catch (error) {
-      toast.error("Wystąpił błąd przy dodawaniu albumu.");
+      toast.error("An error occured while adding an album.");
       console.error("Create Album Error:", error);
     }
   };
