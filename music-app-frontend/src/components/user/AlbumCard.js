@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from "react";
+import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
 import { IoAddCircleOutline, IoCheckmarkCircle } from "react-icons/io5";
 import { IoMdTrash } from "react-icons/io";
 import { IoIosAdd } from "react-icons/io";
 import { IoMdCloseCircle } from "react-icons/io";
+import { IoPencil } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/AuthContext";
 import { useLibrary } from "../../hooks/LibraryContext";
@@ -17,6 +19,8 @@ const AlbumCard = ({ album }) => {
   const { isAlbumInLibrary, addAlbumToLibrary } = useLibrary();
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editData, setEditData] = useState({ ...album });
 
   // useMemo - sprawdza czy album jest już w bibliotece
   const isInLibrary = useMemo(() => {
@@ -105,18 +109,84 @@ const AlbumCard = ({ album }) => {
       }
   };
 
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    setEditData({
+      ...album,
+      tracks: Array.isArray(album.tracks) ? album.tracks : [],
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditAlbumChange = (e) => {
+    const { name, value } = e.target;
+    setEditData({ ...editData, [name]: value });
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await albumService.updateAlbum(editData._id || editData.id, editData);
+      toast.success("Album zaktualizowany!");
+      setIsEditModalOpen(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Update failed:", error);
+      toast.error("Nie udało się zaktualizować albumu.");
+    }
+  };
+
+  const handleEditTrackChange = (index, e) => {
+    const { name, value } = e.target;
+    const updatedTracks = [...editData.tracks];
+    updatedTracks[index][name] = value;
+    setEditData({ ...editData, tracks: updatedTracks });
+  };
+
+  const handleAddEditTrack = () => {
+    setEditData({
+      ...editData,
+      tracks: [
+        ...(Array.isArray(editData.tracks) ? editData.tracks : []),
+        {
+          title: "",
+          artist: "",
+          year: "",
+          length: "",
+          genre: "",
+          nr: "",
+        },
+      ],
+    });
+  };
+
+  const handleRemoveEditTrack = (index) => {
+    const updatedTracks = [...editData.tracks];
+    updatedTracks.splice(index, 1);
+    setEditData({ ...editData, tracks: updatedTracks });
+  };
+
   return (
     <div
       className="bg-black/40 backdrop-blur-sm rounded-lg border border-purple-500/20 cursor-pointer group hover:bg-black/60 transition-all duration-300 relative w-full flex flex-col"
       onClick={handleCardClick}
     >
       {isLoggedIn && isAdmin && (
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+        <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
           <button
             className="text-gray-400 hover:text-red-500 transition-colors"
             onClick={handleDelete}
           >
             <IoMdTrash className="w-5 h-5" />
+          </button>
+          <button
+            className="text-gray-400 hover:text-white transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEditClick(e);
+            }}
+          >
+            <IoPencil className="w-5 h-5 pointer-events-none" />
           </button>
         </div>
       )}
@@ -180,6 +250,152 @@ const AlbumCard = ({ album }) => {
           </span>
         </div>
       </div>
+      {isEditModalOpen &&
+        ReactDOM.createPortal(
+          <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center overflow-auto">
+            <div 
+              className="bg-white rounded-xl p-6 w-full max-w-2xl relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
+                onClick={() => setIsEditModalOpen(false)}
+              >
+                <IoMdCloseCircle className="w-7 h-7" />
+              </button>
+              <h2 className="text-lg font-semibold mb-4 text-gray-800">
+                Edytuj album
+              </h2>
+              <form onSubmit={handleEditSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    name="title"
+                    placeholder="Tytuł albumu"
+                    value={editData.title || ""}
+                    onChange={handleEditAlbumChange}
+                    required
+                    className="border px-3 py-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="artist"
+                    placeholder="Artysta"
+                    value={editData.artist || ""}
+                    onChange={handleEditAlbumChange}
+                    required
+                    className="border px-3 py-2 rounded"
+                  />
+                  <input
+                    type="number"
+                    name="year"
+                    placeholder="Rok"
+                    value={editData.year || ""}
+                    onChange={handleEditAlbumChange}
+                    className="border px-3 py-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="label"
+                    placeholder="Wytwórnia"
+                    value={editData.label || ""}
+                    onChange={handleEditAlbumChange}
+                    className="border px-3 py-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="coverUrl"
+                    placeholder="URL okładki"
+                    value={editData.coverUrl || ""}
+                    onChange={handleEditAlbumChange}
+                    className="col-span-2 border px-3 py-2 rounded"
+                  />
+                </div>
+                <div className="mt-6">
+                  <h3 className="font-semibold text-gray-700 mb-2">Utwory</h3>
+                  {editData.tracks?.map((track, index) => (
+                    <div key={index} className="grid grid-cols-6 gap-2 mb-2 items-center">
+                      <input
+                        type="text"
+                        name="title"
+                        placeholder="Tytuł"
+                        value={track.title}
+                        onChange={(e) => handleEditTrackChange(index, e)}
+                        className="col-span-2 border px-2 py-1 rounded"
+                        required
+                      />
+                      <input
+                        type="text"
+                        name="artist"
+                        placeholder="Artysta"
+                        value={track.artist}
+                        onChange={(e) => handleEditTrackChange(index, e)}
+                        className="border px-2 py-1 rounded"
+                      />
+                      <input
+                        type="number"
+                        name="year"
+                        placeholder="Rok"
+                        value={track.year}
+                        onChange={(e) => handleEditTrackChange(index, e)}
+                        className="border px-2 py-1 rounded"
+                      />
+                      <input
+                        type="number"
+                        name="length"
+                        placeholder="Długość (sekundy)"
+                        value={track.length}
+                        onChange={(e) => handleEditTrackChange(index, e)}
+                        required
+                        className="border px-2 py-1 rounded"
+                      />
+                      <input
+                        type="text"
+                        name="genre"
+                        placeholder="Gatunek"
+                        value={track.genre}
+                        onChange={(e) => handleEditTrackChange(index, e)}
+                        className="border px-2 py-1 rounded"
+                      />
+                      <input
+                        type="number"
+                        name="nr"
+                        placeholder="Nr"
+                        value={track.nr}
+                        onChange={(e) => handleEditTrackChange(index, e)}
+                        className="border px-2 py-1 rounded"
+                      />
+                      {editData.tracks.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveEditTrack(index)}
+                          className="text-red-500 hover:text-red-700 text-sm"
+                        >
+                          Usuń
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={handleAddEditTrack}
+                    className="mt-2 text-blue-500 hover:underline text-sm"
+                  >
+                    + Dodaj kolejny utwór
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  className="mt-4 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+                >
+                  Zapisz zmiany
+                </button>
+              </form>
+            </div>
+          </div>,
+        document.body
+      )}
     </div>
   );
 };
