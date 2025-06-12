@@ -18,9 +18,18 @@ export const albumService = {
 
   createAlbum: async (albumData) => {
     try {
+      const cleanedData = Object.fromEntries(
+        Object.entries(albumData).filter(([_, value]) => value !== ""));
+
+      for (let i = 0; i < cleanedData.tracks.length; i++)
+        cleanedData.tracks[i] = Object.fromEntries(
+          Object.entries(cleanedData.tracks[i]).filter(([_, value]) => value !== ""));
+      
+      console.log(cleanedData);
+      
       const data = await apiRequest(API_ENDPOINTS.albums.create, {
         method: "POST",
-        body: JSON.stringify(albumData),
+        body: JSON.stringify(cleanedData),
       });
       return data;
     } catch (error) {

@@ -207,8 +207,6 @@ export const AddAlbumCard = () => {
     ],
   });
 
-  console.log("Album being sent:", albumData);
-
   const handleAlbumChange = (e) => {
     const { name, value } = e.target;
     setAlbumData({ ...albumData, [name]: value });
@@ -287,7 +285,7 @@ export const AddAlbumCard = () => {
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="cursor-pointer bg-black/20 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 transition-colors duration-200 aspect-square"
+        className="cursor-pointer bg-black/20 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 transition-colors duration-200"
       >
         <IoIosAdd className="w-12 h-12" />
       </button>
@@ -331,6 +329,7 @@ export const AddAlbumCard = () => {
                   placeholder="Rok"
                   value={albumData.year}
                   onChange={handleAlbumChange}
+                  required
                   className="border px-3 py-2 rounded"
                 />
                 <input
@@ -379,7 +378,6 @@ export const AddAlbumCard = () => {
                       value={track.year}
                       onChange={(e) => handleTrackChange(index, e)}
                       className="col-span-2 border px-2 py-1 rounded"
-                      required
                     />
                     <input
                       type="number"
@@ -387,6 +385,7 @@ export const AddAlbumCard = () => {
                       placeholder="Długość (sekundy)"
                       value={track.length}
                       onChange={(e) => handleTrackChange(index, e)}
+                      required
                       className="border px-2 py-1 rounded"
                     />
                     <input
