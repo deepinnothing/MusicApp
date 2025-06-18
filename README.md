@@ -1,4 +1,4 @@
-__MusicApp__ is a modern music streaming-like application made by @deepinnothing, @helena-kaszubowska and @SzymSw as a study project at the University of Gdańsk. The primary features are:
+__MusicApp__ is a modern music streaming-like application made by [@deepinnothing](https://github.com/deepinnothing), [@helena-kaszubowska](https://github.com/helena-kaszubowska) and [@SzymSw](https://github.com/SzymSw) as a study project at the University of Gdańsk. The primary features are:
 - Browsing and searching for music albums
 - User authentication and authorization
 - Personal music library management
