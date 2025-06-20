@@ -130,7 +130,7 @@ const AlbumCard = ({ album }) => {
       window.location.reload();
     } catch (error) {
       console.error("Update failed:", error);
-      toast.error("Album update hasn't succed.");
+      toast.error("Album update hasn't succeed.");
     }
   };
 
